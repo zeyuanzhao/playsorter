@@ -24,6 +24,9 @@ const Template = ({
         router.push("/auth");
       } else {
         getAPI("GET", "me").then((data) => {
+          if (data.error) {
+            router.push("/auth");
+          }
           setUser(data);
         });
       }

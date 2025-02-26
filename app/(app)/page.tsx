@@ -12,17 +12,18 @@ export default function Home() {
   const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
 
   useEffect(() => {
-    getAPI("GET", "me/playlists", { limit: 5 }).then((data) => {
+    getAPI("GET", "me/playlists", { limit: 50 }).then((data) => {
       setPlaylists(data.items);
     });
   }, [router]);
 
   return (
     <div className="px-4 pt-4">
-      <div className="flex flex-row gap-4">
-        {playlists.map((playlist) => {
-          return <Playlist key={playlist.id} {...playlist} />;
-        })}
+      <div className="flex flex-row flex-wrap gap-4">
+        {playlists?.length > 0 &&
+          playlists.map((playlist) => {
+            return <Playlist key={playlist.id} {...playlist} />;
+          })}
       </div>
     </div>
   );

@@ -35,9 +35,10 @@ const Auth = () => {
   return (
     <div>
       <h1 className="text-4xl">Auth</h1>
-      <div></div>
-      <Button onPress={authenticate}>Authenticate</Button>
-      <Button onPress={logOut}>Log Out</Button>
+      <div className="flex flex-row gap-4">
+        <Button onPress={authenticate}>Authenticate</Button>
+        <Button onPress={logOut}>Log Out</Button>
+      </div>
     </div>
   );
 };
