@@ -7,7 +7,7 @@ const authenticate = async () => {
   const redirectUri = `${window.location.origin}/auth/callback`;
 
   const scope =
-    "user-read-private user-read-email user-library-modify playlist-modify-private playlist-modify-public";
+    "user-read-private user-read-email user-library-modify playlist-modify-private playlist-read-private playlist-modify-public user-follow-modify user-follow-read";
   const authUrl = new URL("https://accounts.spotify.com/authorize");
 
   const { codeChallenge, codeVerifier } = await getCodeChallenge();
