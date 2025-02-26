@@ -26,12 +26,18 @@ const authenticate = async () => {
   window.location.href = authUrl.toString();
 };
 
+const logOut = () => {
+  window.localStorage.removeItem("access_token");
+  window.location.reload();
+};
+
 const Auth = () => {
   return (
     <div>
       <h1 className="text-4xl">Auth</h1>
       <div></div>
       <Button onPress={authenticate}>Authenticate</Button>
+      <Button onPress={logOut}>Log Out</Button>
     </div>
   );
 };
