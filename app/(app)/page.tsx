@@ -9,34 +9,17 @@ import { useEffect, useState } from "react";
 
 export default function Home() {
   const router = useRouter();
-  const [token, setToken] = useState("");
-  const [user, setUser] = useState<UserProfile>();
   const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedToken = localStorage.getItem("access_token") ?? "";
-      setToken(storedToken);
-
-      if (storedToken === "") {
-        router.push("/auth");
-      } else {
-        getAPI("GET", "me").then((data) => {
-          setUser(data);
-        });
-        getAPI("GET", "me/playlists", { limit: 5 }).then((data) => {
-          console.log("Fetched playlists:", data.items);
-          setPlaylists(data.items);
-        });
-      }
-    }
+    getAPI("GET", "me/playlists", { limit: 5 }).then((data) => {
+      setPlaylists(data.items);
+    });
   }, [router]);
 
   return (
-    <div>
-      <h1>Spotilist</h1>
-      <div>{user && <UserInfo user={user}></UserInfo>}</div>
-      <div>
+    <div className="px-4 pt-4">
+      <div className="flex flex-row gap-4">
         {playlists.map((playlist) => {
           return <Playlist key={playlist.id} {...playlist} />;
         })}
