@@ -1,0 +1,39 @@
+"use client";
+import getCodeChallenge from "@/lib/getCodeChallenge";
+import { Button } from "@heroui/react";
+
+const authenticate = async () => {
+  const clientId = process.env.NEXT_PUBLIC_SPOTIFY_ID!;
+  const redirectUri = `${window.location.origin}/auth/callback`;
+
+  const scope =
+    "user-read-private user-read-email user-library-modify playlist-modify-private playlist-modify-public";
+  const authUrl = new URL("https://accounts.spotify.com/authorize");
+
+  const { codeChallenge, codeVerifier } = await getCodeChallenge();
+  window.localStorage.setItem("code_verifier", codeVerifier);
+
+  const params = {
+    response_type: "code",
+    client_id: clientId,
+    scope,
+    code_challenge_method: "S256",
+    code_challenge: codeChallenge,
+    redirect_uri: redirectUri,
+  };
+
+  authUrl.search = new URLSearchParams(params).toString();
+  window.location.href = authUrl.toString();
+};
+
+const Auth = () => {
+  return (
+    <div>
+      <h1 className="text-4xl">Auth</h1>
+      <div></div>
+      <Button onPress={authenticate}>Authenticate</Button>
+    </div>
+  );
+};
+
+export default Auth;
