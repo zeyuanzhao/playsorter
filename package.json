@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroui/react": "^2.7.2",
+    "@spotify/web-api-ts-sdk": "^1.2.0",
     "@types/spotify-api": "^0.0.25",
     "framer-motion": "^12.4.7",
     "next": "15.1.7",
