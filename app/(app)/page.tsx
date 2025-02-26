@@ -23,7 +23,8 @@ export default function Home() {
         getAPI("GET", "me").then((data) => {
           setUser(data);
         });
-        getAPI("GET", "me/playlists").then((data) => {
+        getAPI("GET", "me/playlists", { limit: 5 }).then((data) => {
+          console.log("Fetched playlists:", data.items);
           setPlaylists(data.items);
         });
       }
@@ -34,10 +35,9 @@ export default function Home() {
     <div>
       <h1>Spotilist</h1>
       <div>
-        {playlists.length > 0 &&
-          playlists.map((playlist) => {
-            return <Playlist key={playlist.id} {...playlist} />;
-          })}
+        {playlists.map((playlist) => {
+          return <Playlist key={playlist.id} {...playlist} />;
+        })}
       </div>
     </div>
   );
