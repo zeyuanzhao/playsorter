@@ -3,7 +3,7 @@
 import LoadingScreen from "@/components/LoadingScreen";
 import Navbar from "@/components/Navbar";
 import getAPI from "@/lib/getAPI";
-import { Playlist as PlaylistType, UserProfile } from "@spotify/web-api-ts-sdk";
+import { UserProfile } from "@spotify/web-api-ts-sdk";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ const Template = ({
 }: Readonly<{
   children: React.ReactNode;
 }>) => {
-  const [token, setToken] = useState("");
+  const [, setToken] = useState("");
   const [user, setUser] = useState<UserProfile>();
   const router = useRouter();
 
@@ -33,9 +33,11 @@ const Template = ({
       }
     }
   }, [router]);
+
   if (!user) {
     return <LoadingScreen />;
   }
+
   return (
     <div className="px-6">
       <div>
