@@ -15,19 +15,16 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const Playlist = () => {
-  const { id } = useParams();
+  const { id }: { id: string } = useParams();
   const [playlist, setPlaylist] = useState<PlaylistType>();
-  const [tracks, setTracks] = useState<Page<TrackItem>>();
+  const [tracks, setTracks] = useState<TrackItem[]>();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       getAPI("GET", `playlists/${id}`).then((data) => {
         setPlaylist(data);
       });
-      // getTracks(id).then((data) => {
-      //   setTracks(data);
-      // });
-      getAPI("GET", `playlists/${id}/tracks`).then((data) => {
+      getTracks(id).then((data) => {
         setTracks(data);
       });
     }
@@ -41,10 +38,9 @@ const Playlist = () => {
     <div>
       <p>Playlist ID: {id}</p>
       <p>Playlist Name: {playlist?.name}</p>
-      <p>Track Limit: {tracks?.limit}</p>
-      {playlist?.tracks.items.map((track: PlaylistedTrack) => (
-        <Track key={track.track.id + track.added_at} track={track.track} />
-      ))}
+      {tracks.map((track: TrackItem) => {
+        return <Track key={track.id} track={track} />;
+      })}
     </div>
   );
 };

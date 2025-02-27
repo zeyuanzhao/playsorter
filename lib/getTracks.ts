@@ -1,18 +1,26 @@
-import { Page, TrackItem } from "@spotify/web-api-ts-sdk";
+import { Page, PlaylistedTrack, TrackItem } from "@spotify/web-api-ts-sdk";
 import getAPI from "./getAPI";
 
 const getTracks = async (playlistId: string) => {
-  const tracks = [];
+  const tracks: TrackItem[] = [];
+  const LIMIT = 100;
+  let offset = 0;
   while (true) {
-    const res: Page<TrackItem> = await getAPI(
+    const res: Page<PlaylistedTrack> = await getAPI(
       "GET",
       `playlists/${playlistId}/tracks`,
-      {}
+      { limit: LIMIT, offset }
     );
-    res.items.forEach((track) => {
-      tracks.push(track);
+    res.items.forEach((track: PlaylistedTrack) => {
+      tracks.push(track.track);
     });
+    offset += LIMIT;
+    if (res.next === null) {
+      break;
+    }
   }
+
+  return tracks;
 };
 
 export default getTracks;

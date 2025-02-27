@@ -12,7 +12,7 @@ const Navbar = ({ user = undefined }: { user?: UserProfile | undefined }) => {
     <NavbarComponent>
       <NavbarBrand>
         <Link href="/" color="foreground">
-          <h1 className="text-2xl font-bold">Spotify</h1>
+          <h1 className="text-2xl font-bold">SpotiList</h1>
         </Link>
       </NavbarBrand>
       <NavbarContent className="flex flex-row gap-6" justify="center">
