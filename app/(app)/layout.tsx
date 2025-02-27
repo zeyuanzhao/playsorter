@@ -1,7 +1,7 @@
 "use client";
 
 import LoadingScreen from "@/components/LoadingScreen";
-import UserInfo from "@/components/UserInfo";
+import Navbar from "@/components/Navbar";
 import getAPI from "@/lib/getAPI";
 import { Playlist as PlaylistType, UserProfile } from "@spotify/web-api-ts-sdk";
 import { useRouter } from "next/navigation";
@@ -37,10 +37,9 @@ const Template = ({
     return <LoadingScreen />;
   }
   return (
-    <div className="p-6">
-      <h1>SpotiList</h1>
+    <div className="px-6">
       <div>
-        <UserInfo user={user} />
+        <Navbar user={user} />
       </div>
       {children}
     </div>
