@@ -1,6 +1,6 @@
 "use client";
 
-import Playlist from "@/components/Playlist";
+import PlaylistCard from "@/components/PlaylistCard";
 import UserInfo from "@/components/UserInfo";
 import getAPI from "@/lib/getAPI";
 import { Playlist as PlaylistType, UserProfile } from "@spotify/web-api-ts-sdk";
@@ -22,7 +22,7 @@ export default function Home() {
       <div className="flex flex-row flex-wrap gap-4">
         {playlists?.length > 0 &&
           playlists.map((playlist) => {
-            return <Playlist key={playlist.id} {...playlist} />;
+            return <PlaylistCard key={playlist.id} {...playlist} />;
           })}
       </div>
     </div>
