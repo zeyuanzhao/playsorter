@@ -1,9 +1,8 @@
 "use client";
 
 import PlaylistCard from "@/components/PlaylistCard";
-import UserInfo from "@/components/UserInfo";
 import getAPI from "@/lib/getAPI";
-import { Playlist as PlaylistType, UserProfile } from "@spotify/web-api-ts-sdk";
+import { Playlist as PlaylistType } from "@spotify/web-api-ts-sdk";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

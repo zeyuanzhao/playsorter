@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @next/next/no-img-element */
 import { Playlist as PlaylistType } from "@spotify/web-api-ts-sdk";
 import Image from "next/image";
 import Link from "next/link";

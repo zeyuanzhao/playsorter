@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingScreen from "@/components/LoadingScreen";
 import UserInfo from "@/components/UserInfo";
 import getAPI from "@/lib/getAPI";
 import { Playlist as PlaylistType, UserProfile } from "@spotify/web-api-ts-sdk";
@@ -32,10 +33,15 @@ const Template = ({
       }
     }
   }, [router]);
+  if (!user) {
+    return <LoadingScreen />;
+  }
   return (
     <div className="p-6">
-      <h1>Spotilist</h1>
-      <div>{user && <UserInfo user={user} />}</div>
+      <h1>SpotiList</h1>
+      <div>
+        <UserInfo user={user} />
+      </div>
       {children}
     </div>
   );
