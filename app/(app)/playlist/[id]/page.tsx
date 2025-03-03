@@ -3,6 +3,7 @@
 import LoadingScreen from "@/components/LoadingScreen";
 import { TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
+import getNestedProperty from "@/lib/getNestedProperty";
 import getTracks from "@/lib/getTracks";
 import {
   Table,
@@ -20,15 +21,6 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-const getNestedProperty = (
-  obj: any,
-  path: string,
-  format?: (value: any) => any
-) => {
-  const value = path.split(".").reduce((acc, part) => acc && acc[part], obj);
-  return format ? format(value) : value;
-};
 
 const Playlist = () => {
   const { id }: { id: string } = useParams();
