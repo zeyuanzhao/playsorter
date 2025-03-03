@@ -1,5 +1,6 @@
 "use client";
 
+import { UserContext } from "@/app/providers";
 import LoadingScreen from "@/components/LoadingScreen";
 import { SortType, TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
@@ -27,7 +28,6 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { UserContext } from "../../layout";
 
 const Playlist = () => {
   const { id }: { id: string } = useParams();
