@@ -5,7 +5,9 @@ import Navbar from "@/components/Navbar";
 import getAPI from "@/lib/getAPI";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
+
+export const UserContext = createContext<UserProfile | undefined>(undefined);
 
 const Template = ({
   children,
@@ -39,12 +41,14 @@ const Template = ({
   }
 
   return (
-    <div className="px-6">
-      <div>
-        <Navbar user={user} />
+    <UserContext.Provider value={user}>
+      <div className="px-6">
+        <div>
+          <Navbar user={user} />
+        </div>
+        {children}
       </div>
-      {children}
-    </div>
+    </UserContext.Provider>
   );
 };
 

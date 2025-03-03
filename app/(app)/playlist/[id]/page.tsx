@@ -26,7 +26,8 @@ import {
   SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../../layout";
 
 const Playlist = () => {
   const { id }: { id: string } = useParams();
@@ -34,6 +35,7 @@ const Playlist = () => {
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
   const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
   const [sort, setSort] = useState<SortType | undefined>();
+  const user = useContext(UserContext);
 
   const tableColumns = [
     { label: "Title", key: "name" },
@@ -145,7 +147,11 @@ const Playlist = () => {
             </Dropdown>
             <Button
               color="primary"
-              onPress={() => savePlaylist(tracksExtracted)}
+              onPress={() => {
+                if (user) {
+                  savePlaylist(tracksExtracted, user);
+                }
+              }}
             >
               Save
             </Button>
