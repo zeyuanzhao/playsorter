@@ -1,17 +1,31 @@
 import isTrackType from "@/lib/isTrackType";
+import { TableCell, TableRow } from "@heroui/react";
 import { SimplifiedArtist, TrackItem } from "@spotify/web-api-ts-sdk";
 
-const Track = ({ track }: { track: TrackItem }) => {
+const Track = ({
+  track,
+  tableKey,
+}: {
+  track: TrackItem;
+  tableKey: unknown;
+}) => {
   if (isTrackType(track)) {
     return (
-      <div className="flex flex-row justify-between">
-        <p>{track.name}</p>
-        <p>
-          {track.artists.map((artist: SimplifiedArtist) => {
-            return " " + artist.name;
-          })}
-        </p>
-      </div>
+      <TableRow key={String(tableKey)}>
+        <TableCell>
+          <p>{track.name}</p>
+        </TableCell>
+        <TableCell>
+          <p>{track.album.name}</p>
+        </TableCell>
+        <TableCell>
+          {track.artists
+            .map((artist: SimplifiedArtist) => {
+              return artist.name;
+            })
+            .join(", ")}
+        </TableCell>
+      </TableRow>
     );
   }
 };

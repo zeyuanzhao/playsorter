@@ -1,4 +1,4 @@
-import { Page, PlaylistedTrack, TrackItem } from "@spotify/web-api-ts-sdk";
+import { Page, PlaylistedTrack } from "@spotify/web-api-ts-sdk";
 import getAPI from "./getAPI";
 
 const getTracks = async (playlistId: string) => {
