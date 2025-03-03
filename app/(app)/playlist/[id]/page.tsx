@@ -58,7 +58,6 @@ const Playlist = () => {
   ];
 
   useEffect(() => {
-    console.log(sort);
     if (sort) {
       setTracksExtracted((prevTracks) => {
         const sortedTracks = [...prevTracks].sort((a, b) => {
@@ -108,7 +107,6 @@ const Playlist = () => {
             };
           })
         );
-        console.log(tempTracksExtracted);
         setTracksExtracted(tempTracksExtracted);
       });
     }
