@@ -41,14 +41,14 @@ const Template = ({
   }
 
   return (
-    <UserContext.Provider value={user}>
-      <div className="px-6">
+    <div className="px-6">
+      <UserContext.Provider value={user}>
         <div>
           <Navbar user={user} />
         </div>
         {children}
-      </div>
-    </UserContext.Provider>
+      </UserContext.Provider>
+    </div>
   );
 };
 
