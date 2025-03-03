@@ -2,6 +2,7 @@
 
 import LoadingScreen from "@/components/LoadingScreen";
 import Track from "@/components/Track";
+import { TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
 import getTracks from "@/lib/getTracks";
 import {
@@ -30,11 +31,12 @@ const Playlist = () => {
   const { id }: { id: string } = useParams();
   const [playlist, setPlaylist] = useState<PlaylistType>();
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
+  const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
 
   const tableColumns = [
-    { label: "Title", key: "track.name" },
-    { label: "Album", key: "track.album.name" },
-    { label: "Artist", key: "track.artists[0].name" },
+    { label: "Title", key: "name" },
+    { label: "Album", key: "albumName" },
+    { label: "Artist", key: "artists" },
   ];
 
   useEffect(() => {
@@ -43,12 +45,27 @@ const Playlist = () => {
         setPlaylist(data);
       });
       getTracks(id).then((data) => {
+        const tempTracksExtracted: TrackExtracted[] = [];
+
         setTracks(
-          data.map((track, i) => ({
-            ...track,
-            id: i,
-          }))
+          data.map((track, i) => {
+            tempTracksExtracted.push({
+              id: i,
+              name: track.track.name,
+              albumName: (track.track as TrackType).album.name,
+              artists: (track.track as TrackType).artists
+                .map((artist: SimplifiedArtist) => {
+                  return artist.name;
+                })
+                .join(", "),
+            });
+            return {
+              ...track,
+              id: i,
+            };
+          })
         );
+        setTracksExtracted(tempTracksExtracted);
       });
     }
   }, [id]);
@@ -73,7 +90,7 @@ const Playlist = () => {
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={tracks}>
+        <TableBody items={tracksExtracted}>
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (
