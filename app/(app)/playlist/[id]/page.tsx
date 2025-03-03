@@ -5,6 +5,7 @@ import { SortType, TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
 import getNestedProperty from "@/lib/getNestedProperty";
 import getTracks from "@/lib/getTracks";
+import savePlaylist from "@/lib/savePlaylist";
 import {
   Button,
   Dropdown,
@@ -83,6 +84,7 @@ const Playlist = () => {
           data.map((track, i) => {
             tempTracksExtracted.push({
               id: i,
+              uri: track.track.uri,
               name: track.track.name,
               albumName: (track.track as TrackType).album.name,
               artists: (track.track as TrackType).artists
@@ -126,20 +128,28 @@ const Playlist = () => {
           </div>
         </div>
         <div className="flex flex-col justify-end">
-          <Dropdown>
-            <DropdownTrigger>
-              <Button variant="bordered">Sort by</Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label="Sort By"
-              onAction={(key) => setSort(key as SortType)}
+          <div className="flex flex-row gap-x-2">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button variant="bordered">Sort by</Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Sort By"
+                onAction={(key) => setSort(key as SortType)}
+              >
+                <DropdownItem key="name">Title</DropdownItem>
+                <DropdownItem key="artists">Artist</DropdownItem>
+                <DropdownItem key="albumName">Album</DropdownItem>
+                <DropdownItem key="duration">Duration</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+            <Button
+              color="primary"
+              onPress={() => savePlaylist(tracksExtracted)}
             >
-              <DropdownItem key="name">Title</DropdownItem>
-              <DropdownItem key="artists">Artist</DropdownItem>
-              <DropdownItem key="albumName">Album</DropdownItem>
-              <DropdownItem key="duration">Duration</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+              Save
+            </Button>
+          </div>
         </div>
       </div>
       <Table

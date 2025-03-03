@@ -4,6 +4,7 @@ export type SortType = keyof TrackExtracted;
 
 export interface TrackExtracted {
   id: number;
+  uri: string;
   name: string;
   albumName: string;
   artists: string;
