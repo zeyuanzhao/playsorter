@@ -34,7 +34,7 @@ const logOut = () => {
 const Auth = () => {
   return (
     <div>
-      <h1 className="text-4xl">Auth</h1>
+      <h1 className="text-4xl font-bold mb-4">Auth</h1>
       <div className="flex flex-row gap-4">
         <Button onPress={authenticate}>Authenticate</Button>
         <Button onPress={logOut}>Log Out</Button>
