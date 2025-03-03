@@ -1,10 +1,6 @@
 import Navbar from "@/components/Navbar";
 
-const Template = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
+const Template = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="px-6">
       <div>

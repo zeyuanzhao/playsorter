@@ -9,11 +9,7 @@ import { createContext, useEffect, useState } from "react";
 
 export const UserContext = createContext<UserProfile | undefined>(undefined);
 
-const Template = ({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) => {
+const Template = ({ children }: { children: React.ReactNode }) => {
   const [, setToken] = useState("");
   const [user, setUser] = useState<UserProfile>();
   const router = useRouter();
