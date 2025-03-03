@@ -20,6 +20,7 @@ import {
   PlaylistedTrack,
   SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
+import { assert } from "console";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -58,6 +59,13 @@ const Playlist = () => {
                   return artist.name;
                 })
                 .join(", "),
+              addedAt: track.added_at,
+              addedBy: track.added_by.id,
+              isLocal: track.is_local,
+              duration: (track.track as TrackType).duration_ms,
+              explicit: (track.track as TrackType).explicit,
+              isPlayable: (track.track as TrackType).is_playable ?? true,
+              popularity: (track.track as TrackType).popularity,
             });
             return {
               ...track,
@@ -65,6 +73,7 @@ const Playlist = () => {
             };
           })
         );
+        console.log(tempTracksExtracted);
         setTracksExtracted(tempTracksExtracted);
       });
     }
@@ -74,8 +83,6 @@ const Playlist = () => {
     return <LoadingScreen />;
   }
 
-  // TODO fix accessing nested properties and display artists in a list
-
   return (
     <div>
       <h1 className="text-4xl font-bold mb-1">{playlist?.name}</h1>
@@ -84,13 +91,16 @@ const Playlist = () => {
         <span className="text-xl">•</span>
         <h2 className="text-xl">{playlist?.tracks.total} Songs</h2>
       </div>
-      <Table className="table-auto">
+      <Table isStriped className="table-auto mb-8">
         <TableHeader columns={tableColumns}>
           {(column) => (
             <TableColumn key={column.key}>{column.label}</TableColumn>
           )}
         </TableHeader>
-        <TableBody items={tracksExtracted}>
+        <TableBody
+          emptyContent={"No songs in playlist."}
+          items={tracksExtracted}
+        >
           {(item) => (
             <TableRow key={item.id}>
               {(columnKey) => (

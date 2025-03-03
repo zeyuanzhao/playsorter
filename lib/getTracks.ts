@@ -1,5 +1,6 @@
 import { Page, PlaylistedTrack } from "@spotify/web-api-ts-sdk";
 import getAPI from "./getAPI";
+import isTrackType from "./isTrackType";
 
 const getTracks = async (playlistId: string) => {
   const tracks: PlaylistedTrack[] = [];
@@ -12,7 +13,7 @@ const getTracks = async (playlistId: string) => {
       { limit: LIMIT, offset }
     );
     res.items.forEach((track: PlaylistedTrack) => {
-      tracks.push(track);
+      if (isTrackType(track.track)) tracks.push(track);
     });
     offset += LIMIT;
     if (res.next === null) {
