@@ -1,11 +1,16 @@
 "use client";
 
 import LoadingScreen from "@/components/LoadingScreen";
-import { TrackExtracted } from "@/interfaces";
+import { SortType, TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
 import getNestedProperty from "@/lib/getNestedProperty";
 import getTracks from "@/lib/getTracks";
 import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Table,
   TableBody,
   TableCell,
@@ -27,6 +32,7 @@ const Playlist = () => {
   const [playlist, setPlaylist] = useState<PlaylistType>();
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
   const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
+  const [sort, setSort] = useState<SortType | undefined>();
 
   const tableColumns = [
     { label: "Title", key: "name" },
@@ -47,6 +53,23 @@ const Playlist = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    console.log(sort);
+    if (sort) {
+      setTracksExtracted((prevTracks) => {
+        const sortedTracks = [...prevTracks].sort((a, b) => {
+          const aValue = getNestedProperty(a, sort);
+          const bValue = getNestedProperty(b, sort);
+          if (typeof aValue === "string") {
+            return aValue.localeCompare(bValue);
+          }
+          return aValue - bValue;
+        });
+        return sortedTracks;
+      });
+    }
+  }, [sort]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -93,11 +116,31 @@ const Playlist = () => {
 
   return (
     <div>
-      <h1 className="text-4xl font-bold mb-1">{playlist?.name}</h1>
-      <div className="flex gap-x-2 mb-8">
-        <h2 className="text-xl">{playlist?.owner.display_name}</h2>
-        <span className="text-xl">•</span>
-        <h2 className="text-xl">{playlist?.tracks.total} Songs</h2>
+      <div className="mb-6 flex flex-row justify-between">
+        <div>
+          <h1 className="text-4xl font-bold mb-1">{playlist?.name}</h1>
+          <div className="flex gap-x-2">
+            <h2 className="text-xl">{playlist?.owner.display_name}</h2>
+            <span className="text-xl">•</span>
+            <h2 className="text-xl">{playlist?.tracks.total} Songs</h2>
+          </div>
+        </div>
+        <div className="flex flex-col justify-end">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button variant="bordered">Sort by</Button>
+            </DropdownTrigger>
+            <DropdownMenu
+              aria-label="Sort By"
+              onAction={(key) => setSort(key as SortType)}
+            >
+              <DropdownItem key="name">Title</DropdownItem>
+              <DropdownItem key="artists">Artist</DropdownItem>
+              <DropdownItem key="albumName">Album</DropdownItem>
+              <DropdownItem key="duration">Duration</DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
+        </div>
       </div>
       <Table
         isStriped
