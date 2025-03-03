@@ -1,12 +1,10 @@
 "use client";
 
 import LoadingScreen from "@/components/LoadingScreen";
-import Track from "@/components/Track";
 import { TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
 import getTracks from "@/lib/getTracks";
 import {
-  getKeyValue,
   Table,
   TableBody,
   TableCell,
@@ -20,12 +18,16 @@ import {
   PlaylistedTrack,
   SimplifiedArtist,
 } from "@spotify/web-api-ts-sdk";
-import { assert } from "console";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const getNestedProperty = (obj: any, path: string) => {
-  return path.split(".").reduce((acc, part) => acc && acc[part], obj);
+const getNestedProperty = (
+  obj: any,
+  path: string,
+  format?: (value: any) => any
+) => {
+  const value = path.split(".").reduce((acc, part) => acc && acc[part], obj);
+  return format ? format(value) : value;
 };
 
 const Playlist = () => {
@@ -38,6 +40,20 @@ const Playlist = () => {
     { label: "Title", key: "name" },
     { label: "Album", key: "albumName" },
     { label: "Artist", key: "artists" },
+    {
+      label: "Duration",
+      key: "duration",
+      align: "end",
+      format: (duration: number) => {
+        const hours = Math.floor(duration / 3600000);
+        const minutes = Math.floor(duration / 60000);
+        const seconds = ((duration % 60000) / 1000).toFixed(0);
+        return `${hours !== 0 ? `${hours}:` : ""}${minutes}:${seconds.padStart(
+          2,
+          "0"
+        )}`;
+      },
+    },
   ];
 
   useEffect(() => {
@@ -91,10 +107,22 @@ const Playlist = () => {
         <span className="text-xl">•</span>
         <h2 className="text-xl">{playlist?.tracks.total} Songs</h2>
       </div>
-      <Table isStriped className="table-auto mb-8">
+      <Table
+        isStriped
+        className="table-auto mb-8"
+        aria-label="Tracks in playlist"
+      >
         <TableHeader columns={tableColumns}>
           {(column) => (
-            <TableColumn key={column.key}>{column.label}</TableColumn>
+            <TableColumn
+              key={column.key}
+              align={
+                (column.align as "center" | "start" | "end" | undefined) ??
+                "start"
+              }
+            >
+              {column.label}
+            </TableColumn>
           )}
         </TableHeader>
         <TableBody
@@ -105,7 +133,12 @@ const Playlist = () => {
             <TableRow key={item.id}>
               {(columnKey) => (
                 <TableCell>
-                  {getNestedProperty(item, columnKey as string)}
+                  {getNestedProperty(
+                    item,
+                    columnKey as string,
+                    tableColumns.find((column) => column.key === columnKey)
+                      ?.format
+                  )}
                 </TableCell>
               )}
             </TableRow>
