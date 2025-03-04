@@ -1,6 +1,8 @@
 "use client";
+import { UserContext } from "@/app/providers";
 import getCodeChallenge from "@/lib/getCodeChallenge";
 import { Button } from "@heroui/react";
+import { useContext } from "react";
 
 const authenticate = async () => {
   const clientId = process.env.NEXT_PUBLIC_SPOTIFY_ID!;
@@ -32,12 +34,20 @@ const logOut = () => {
 };
 
 const Auth = () => {
+  const userContext = useContext(UserContext);
+  if (!userContext) {
+    throw new Error("UserContext is not provided");
+  }
+  const [user] = userContext;
   return (
     <div>
       <h1 className="text-4xl font-bold mb-4">Auth</h1>
       <div className="flex flex-row gap-4">
-        <Button onPress={authenticate}>Authenticate</Button>
-        <Button onPress={logOut}>Log Out</Button>
+        {user ? (
+          <Button onPress={logOut}>Log Out</Button>
+        ) : (
+          <Button onPress={authenticate}>Authenticate</Button>
+        )}
       </div>
     </div>
   );

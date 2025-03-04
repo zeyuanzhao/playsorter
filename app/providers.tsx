@@ -38,9 +38,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
         getAPI("GET", "me").then((data) => {
           if (data.error) {
             localStorage.removeItem("access_token");
+            setToken("");
+            setUser(undefined);
             router.push("/auth");
+          } else {
+            setUser(data);
           }
-          setUser(data);
         });
       }
     }

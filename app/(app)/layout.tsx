@@ -24,7 +24,6 @@ const Template = ({ children }: { children: React.ReactNode }) => {
   }, [router]);
 
   if (!user) {
-    debugger;
     return <LoadingScreen />;
   }
 
