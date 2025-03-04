@@ -35,7 +35,11 @@ const Playlist = () => {
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
   const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
   const [sort, setSort] = useState<SortType | undefined>();
-  const user = useContext(UserContext);
+  const userContext = useContext(UserContext);
+  if (!userContext) {
+    throw new Error("UserContext must be used within a UserProvider");
+  }
+  const [user] = userContext;
 
   const tableColumns = [
     { label: "Title", key: "name" },

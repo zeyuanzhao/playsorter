@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { HeroUIProvider } from "@heroui/react";
-import { createContext, useEffect, useState } from "react";
+import { createContext, Dispatch, useEffect, useState } from "react";
 import { UserProfile } from "@spotify/web-api-ts-sdk";
 import getAPI from "@/lib/getAPI";
 
@@ -15,11 +15,16 @@ declare module "@react-types/shared" {
   }
 }
 
-export const UserContext = createContext<UserProfile | undefined>(undefined);
+export const UserContext = createContext<
+  [UserProfile | undefined, Dispatch<UserProfile>] | undefined
+>(undefined);
+export const TokenContext = createContext<
+  [string | undefined, Dispatch<string>] | undefined
+>(undefined);
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile>();
-  const [, setToken] = useState("");
+  const [token, setToken] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
@@ -38,11 +43,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
         });
       }
     }
-  }, [router]);
+  }, [router, token]);
 
   return (
-    <UserContext.Provider value={user}>
-      <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>{" "}
-    </UserContext.Provider>
+    <TokenContext.Provider value={[token, setToken]}>
+      <UserContext.Provider value={[user, setUser]}>
+        <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>{" "}
+      </UserContext.Provider>
+    </TokenContext.Provider>
   );
 }
