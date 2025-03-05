@@ -30,7 +30,12 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
-import { FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaChevronUp,
+  FaSortAlphaDown,
+  FaSortAlphaUp,
+} from "react-icons/fa";
 
 const Playlist = () => {
   const { id }: { id: string } = useParams();
@@ -134,13 +139,42 @@ const Playlist = () => {
                     textValue={sort.name}
                     key={sort.id}
                     endContent={
-                      sort.active ? (
-                        sort.direction === "asc" ? (
-                          <FaSortAlphaUp />
-                        ) : (
-                          <FaSortAlphaDown />
-                        )
-                      ) : null
+                      <div className="flex flex-row justify-between items-center">
+                        <div className="ml-2 flex justify-between items-center">
+                          <button
+                            className="p-1 hover:outline outline-1 outline-gray-400 rounded-lg"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (i > 0) {
+                                const newSorts = [...sorts];
+                                [newSorts[i - 1], newSorts[i]] = [
+                                  newSorts[i],
+                                  newSorts[i - 1],
+                                ];
+                                setSorts(newSorts);
+                              }
+                            }}
+                          >
+                            <FaChevronUp />
+                          </button>
+                          <button
+                            className="p-1 hover:outline outline-1 outline-gray-400 rounded-lg"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (i < sorts.length - 1) {
+                                const newSorts = [...sorts];
+                                [newSorts[i + 1], newSorts[i]] = [
+                                  newSorts[i],
+                                  newSorts[i + 1],
+                                ];
+                                setSorts(newSorts);
+                              }
+                            }}
+                          >
+                            <FaChevronDown />
+                          </button>
+                        </div>
+                      </div>
                     }
                     onPress={() => {
                       const newSorts = [...sorts];
@@ -155,12 +189,18 @@ const Playlist = () => {
                       } else if (newSorts[i].direction === "asc") {
                         newSorts[i].direction = "desc";
                       }
-                      console.log(newSorts[i]);
                       setSorts(newSorts);
                     }}
                   >
-                    <div className="flex flex-row justify-between items-center">
+                    <div className="flex flex-row gap-x-2 items-center">
                       <p>{sort.name}</p>
+                      {sort.active ? (
+                        sort.direction === "asc" ? (
+                          <FaSortAlphaUp />
+                        ) : (
+                          <FaSortAlphaDown />
+                        )
+                      ) : null}
                     </div>
                   </DropdownItem>
                 ))}
