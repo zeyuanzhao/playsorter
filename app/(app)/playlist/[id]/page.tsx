@@ -139,12 +139,21 @@ const Playlist = () => {
                     textValue={sort.name}
                     key={sort.id}
                     endContent={
-                      <div className="flex flex-row justify-between items-center">
-                        <div className="ml-2 flex justify-between items-center">
+                      <div
+                        className="flex flex-row justify-between items-center"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <div
+                          className="ml-2 flex justify-between items-center"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
                           <button
                             className="p-1 hover:outline outline-1 outline-gray-400 rounded-lg"
                             onClick={(e) => {
-                              e.stopPropagation();
                               if (i > 0) {
                                 const newSorts = [...sorts];
                                 [newSorts[i - 1], newSorts[i]] = [
@@ -159,8 +168,7 @@ const Playlist = () => {
                           </button>
                           <button
                             className="p-1 hover:outline outline-1 outline-gray-400 rounded-lg"
-                            onClick={(e) => {
-                              e.stopPropagation();
+                            onClick={() => {
                               if (i < sorts.length - 1) {
                                 const newSorts = [...sorts];
                                 [newSorts[i + 1], newSorts[i]] = [
@@ -176,23 +184,26 @@ const Playlist = () => {
                         </div>
                       </div>
                     }
-                    onPress={() => {
-                      const newSorts = [...sorts];
-                      if (
-                        newSorts[i].direction === "desc" &&
-                        newSorts[i].active
-                      ) {
-                        newSorts[i].active = !sort.active;
-                      } else if (!newSorts[i].active) {
-                        newSorts[i].direction = "asc";
-                        newSorts[i].active = true;
-                      } else if (newSorts[i].direction === "asc") {
-                        newSorts[i].direction = "desc";
-                      }
-                      setSorts(newSorts);
-                    }}
                   >
-                    <div className="flex flex-row gap-x-2 items-center">
+                    {/* TODO fix stop propagation */}
+                    <div
+                      className="flex flex-row gap-x-2 items-center w-full"
+                      onClick={() => {
+                        const newSorts = [...sorts];
+                        if (
+                          newSorts[i].direction === "desc" &&
+                          newSorts[i].active
+                        ) {
+                          newSorts[i].active = !sort.active;
+                        } else if (!newSorts[i].active) {
+                          newSorts[i].direction = "asc";
+                          newSorts[i].active = true;
+                        } else if (newSorts[i].direction === "asc") {
+                          newSorts[i].direction = "desc";
+                        }
+                        setSorts(newSorts);
+                      }}
+                    >
                       <p>{sort.name}</p>
                       {sort.active ? (
                         sort.direction === "asc" ? (
