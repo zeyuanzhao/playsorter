@@ -42,6 +42,9 @@ const Playlist = () => {
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
   const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
   const [sorts, setSorts] = useState<SortType[]>(defaultSorts);
+  const [originalTracksExtracted, setOriginalTracksExtracted] = useState<
+    TrackExtracted[]
+  >([]);
   const userContext = useContext(UserContext);
   if (!userContext) {
     throw new Error("UserContext must be used within a UserProvider");
@@ -70,9 +73,11 @@ const Playlist = () => {
 
   useEffect(() => {
     // sort the tracks using the sorts array
+    let sortActive = false;
     const sortedTracks = [...tracksExtracted].sort((a, b) => {
       for (const sort of sorts) {
         if (!sort.active) continue;
+        sortActive = true;
         const aValue = getNestedProperty(a, sort.id);
         const bValue = getNestedProperty(b, sort.id);
         if (typeof aValue === "string" && typeof bValue === "string") {
@@ -90,7 +95,12 @@ const Playlist = () => {
       }
       return 0;
     });
+    if (!sortActive) {
+      setTracksExtracted(originalTracksExtracted);
+      return;
+    }
     setTracksExtracted(sortedTracks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sorts]);
 
   useEffect(() => {
@@ -128,6 +138,7 @@ const Playlist = () => {
           })
         );
         setTracksExtracted(tempTracksExtracted);
+        setOriginalTracksExtracted(tempTracksExtracted);
       });
     }
   }, [id]);
