@@ -1,6 +1,11 @@
 export type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
 
-export type SortType = keyof TrackExtracted;
+export interface SortType {
+  id: keyof TrackExtracted;
+  name: string;
+  active: boolean;
+  direction: "asc" | "desc";
+}
 
 export interface TrackExtracted {
   id: number;

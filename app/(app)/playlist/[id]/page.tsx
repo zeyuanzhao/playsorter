@@ -2,6 +2,7 @@
 
 import { UserContext } from "@/app/providers";
 import LoadingScreen from "@/components/LoadingScreen";
+import { defaultSorts } from "@/constants";
 import { SortType, TrackExtracted } from "@/interfaces";
 import getAPI from "@/lib/getAPI";
 import getNestedProperty from "@/lib/getNestedProperty";
@@ -9,6 +10,7 @@ import getTracks from "@/lib/getTracks";
 import savePlaylist from "@/lib/savePlaylist";
 import {
   Button,
+  Checkbox,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -28,13 +30,14 @@ import {
 } from "@spotify/web-api-ts-sdk";
 import { useParams } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import { FaSortAlphaDown, FaSortAlphaUp } from "react-icons/fa";
 
 const Playlist = () => {
   const { id }: { id: string } = useParams();
   const [playlist, setPlaylist] = useState<PlaylistType>();
   const [tracks, setTracks] = useState<(PlaylistedTrack & { id: number })[]>();
   const [tracksExtracted, setTracksExtracted] = useState<TrackExtracted[]>([]);
-  const [sort, setSort] = useState<SortType | undefined>();
+  const [sorts, setSorts] = useState<SortType[]>(defaultSorts);
   const userContext = useContext(UserContext);
   if (!userContext) {
     throw new Error("UserContext must be used within a UserProvider");
@@ -60,22 +63,6 @@ const Playlist = () => {
       },
     },
   ];
-
-  useEffect(() => {
-    if (sort) {
-      setTracksExtracted((prevTracks) => {
-        const sortedTracks = [...prevTracks].sort((a, b) => {
-          const aValue = getNestedProperty(a, sort);
-          const bValue = getNestedProperty(b, sort);
-          if (typeof aValue === "string") {
-            return aValue.localeCompare(bValue);
-          }
-          return aValue - bValue;
-        });
-        return sortedTracks;
-      });
-    }
-  }, [sort]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -139,12 +126,44 @@ const Playlist = () => {
               </DropdownTrigger>
               <DropdownMenu
                 aria-label="Sort By"
-                onAction={(key) => setSort(key as SortType)}
+                closeOnSelect={false}
+                variant="bordered"
               >
-                <DropdownItem key="name">Title</DropdownItem>
-                <DropdownItem key="artists">Artist</DropdownItem>
-                <DropdownItem key="albumName">Album</DropdownItem>
-                <DropdownItem key="duration">Duration</DropdownItem>
+                {sorts.map((sort, i) => (
+                  <DropdownItem
+                    textValue={sort.name}
+                    key={sort.id}
+                    endContent={
+                      sort.active ? (
+                        sort.direction === "asc" ? (
+                          <FaSortAlphaUp />
+                        ) : (
+                          <FaSortAlphaDown />
+                        )
+                      ) : null
+                    }
+                    onPress={() => {
+                      const newSorts = [...sorts];
+                      if (
+                        newSorts[i].direction === "desc" &&
+                        newSorts[i].active
+                      ) {
+                        newSorts[i].active = !sort.active;
+                      } else if (!newSorts[i].active) {
+                        newSorts[i].direction = "asc";
+                        newSorts[i].active = true;
+                      } else if (newSorts[i].direction === "asc") {
+                        newSorts[i].direction = "desc";
+                      }
+                      console.log(newSorts[i]);
+                      setSorts(newSorts);
+                    }}
+                  >
+                    <div className="flex flex-row justify-between items-center">
+                      <p>{sort.name}</p>
+                    </div>
+                  </DropdownItem>
+                ))}
               </DropdownMenu>
             </Dropdown>
             <Button
