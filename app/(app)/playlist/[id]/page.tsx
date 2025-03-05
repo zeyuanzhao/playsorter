@@ -10,7 +10,6 @@ import getTracks from "@/lib/getTracks";
 import savePlaylist from "@/lib/savePlaylist";
 import {
   Button,
-  Checkbox,
   Dropdown,
   DropdownItem,
   DropdownMenu,
@@ -68,6 +67,31 @@ const Playlist = () => {
       },
     },
   ];
+
+  useEffect(() => {
+    // sort the tracks using the sorts array
+    const sortedTracks = [...tracksExtracted].sort((a, b) => {
+      for (const sort of sorts) {
+        if (!sort.active) continue;
+        const aValue = getNestedProperty(a, sort.id);
+        const bValue = getNestedProperty(b, sort.id);
+        if (typeof aValue === "string" && typeof bValue === "string") {
+          if (aValue.toLowerCase() < bValue.toLowerCase()) {
+            return sort.direction === "asc" ? -1 : 1;
+          } else if (aValue.toLowerCase() > bValue.toLowerCase()) {
+            return sort.direction === "asc" ? 1 : -1;
+          }
+        }
+        if (aValue < bValue) {
+          return sort.direction === "asc" ? -1 : 1;
+        } else if (aValue > bValue) {
+          return sort.direction === "asc" ? 1 : -1;
+        }
+      }
+      return 0;
+    });
+    setTracksExtracted(sortedTracks);
+  }, [sorts]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -153,7 +177,7 @@ const Playlist = () => {
                         >
                           <button
                             className="p-1 hover:outline outline-1 outline-gray-400 rounded-lg"
-                            onClick={(e) => {
+                            onClick={() => {
                               if (i > 0) {
                                 const newSorts = [...sorts];
                                 [newSorts[i - 1], newSorts[i]] = [
