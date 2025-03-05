@@ -1,18 +1,24 @@
-import { TrackExtracted } from "@/interfaces";
+import { SortType, TrackExtracted } from "@/interfaces";
 import { Playlist, UserProfile } from "@spotify/web-api-ts-sdk";
 import getAPI from "./getAPI";
 
 const savePlaylist = async (
   tracks: TrackExtracted[],
   user: UserProfile,
-  playlist: Playlist
+  playlist: Playlist,
+  sorts: SortType[]
 ) => {
   const uris = tracks.map((track) => track.uri);
   const newPlaylist = getAPI("POST", `users/${user.id}/playlists`, {
     name: playlist.name + " (sorted)",
     public: playlist.public,
     collaborative: playlist.collaborative,
-    description: playlist.description,
+    description:
+      playlist.description +
+      ` (sorted by ${sorts
+        .filter((sort) => sort.active)
+        .map((sort) => sort.name)
+        .join(", ")})`,
   });
   newPlaylist.then(async (data) => {
     for (let i = 0; i < uris.length; i += 100) {

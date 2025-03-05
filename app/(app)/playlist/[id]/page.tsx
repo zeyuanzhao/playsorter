@@ -256,7 +256,7 @@ const Playlist = () => {
               color="primary"
               onPress={() => {
                 if (user) {
-                  savePlaylist(tracksExtracted, user, playlist);
+                  savePlaylist(tracksExtracted, user, playlist, sorts);
                 }
               }}
             >
